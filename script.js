@@ -190,6 +190,10 @@ function handleClientShit() {
 	showElement("mainAppContainer");
 	let i = 0;
 
+	getElement("mainAppContainerForm").addEventListener("submit", (e) => {
+		e.preventDefault();
+	});
+
 	return new Promise((resolve) => {
 		createMessage("test", "test", Date.now());
 	});
