@@ -80,7 +80,7 @@ async function _handleClientLogin() {
 	showElement("accountStatusContainer");
 
 	await new Promise(async (resolve) => {
-		const switchStatusButton = getElement("accountStatusContainerSpecialButton");
+		const switchStatusButton = getElement("accountStatusContainerDataSubmitForm");
 		const switchyStatus = getElement("accountStatusContainerSpecialSwitchButton");
 		let state = "login";
 
@@ -99,7 +99,7 @@ async function _handleClientLogin() {
 			}
 		}
 
-		switchyStatus.addEventListener("click", () => {
+		switchyStatus.addEventListener("submit", () => {
 			if (state === "login") {
 				changeState("register");
 			} else {
@@ -107,7 +107,8 @@ async function _handleClientLogin() {
 			}
 		});
 
-		switchStatusButton.addEventListener("click", async () => {
+		switchStatusButton.addEventListener("submit", async (e) => {
+			e.preventDefault();
 			hideElement("accountStatusContainerLoginFormFailureNotice");
 
 			try {
@@ -146,7 +147,6 @@ async function _handleClientLogin() {
 
 async function handleClientLogin() {
 	const token = localStorage.getItem("token");
-	showElement("mainAppContainer");
 
 	if (token === null) {
 		await _handleClientLogin();
@@ -186,31 +186,16 @@ function createMessage(userId, content, timestamp) {
 	return;
 }
 
-// function resizeShit() {
-// 	const messageChatBox = getElement("mainAppContainerChatBox");
-// 	const height = window.innerHeight;
-// 	const width = window.innerWidth;
-
-// 	console.log(height * 0.5);
-
-// 	messageChatBox.style.height = (height * 0.5) / 1;
-// 	messageChatBox.style.width = (width * 0.5) / 1;
-// }
-// window.addEventListener("resize", () => {
-// 	console.log("resize event");
-// 	resizeShit();
-// });
-
 function handleClientShit() {
+	showElement("mainAppContainer");
 	let i = 0;
-	// resizeShit();
 
 	return new Promise((resolve) => {
 		// setInterval(() => {
 			// createMessage("meow", (i++).toString(), Date.now());
 		// }, 100);
 
-		createMessage("test", "test", 0);
+		createMessage("test", "test", Date.now());
 		// createMessage("eqilia", "Web development is sometimes odd.", Date.now());
 		// createMessage("eqilia", "No, like, seriously, what the fuck?", Date.now()+2500);
 		// createMessage("eqilia", "I thought I was insane while writing it.", Date.now()+3500);
