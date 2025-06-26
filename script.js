@@ -51,6 +51,8 @@ async function handleCookieConsent() {
 		await _handleCookieConsent();
 		return;
 	}
+
+	return;
 }
 
 async function peakFetch(url, body, token) {
