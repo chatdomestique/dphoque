@@ -191,16 +191,7 @@ function handleClientShit() {
 	let i = 0;
 
 	return new Promise((resolve) => {
-		// setInterval(() => {
-			// createMessage("meow", (i++).toString(), Date.now());
-		// }, 100);
-
 		createMessage("test", "test", Date.now());
-		// createMessage("eqilia", "Web development is sometimes odd.", Date.now());
-		// createMessage("eqilia", "No, like, seriously, what the fuck?", Date.now()+2500);
-		// createMessage("eqilia", "I thought I was insane while writing it.", Date.now()+3500);
-		// createMessage("eqilia", "\"position, height, width\"... It didn't work.", Date.now()+5500);
-		// createMessage("eqilia", "I'm scared in how this will come out when servers are fully implemented.", Date.now()+7600);
 	});
 }
 
