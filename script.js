@@ -20,6 +20,69 @@ function hideElement(id) {
 	getElement(id).hidden = true;
 }
 
+async function peakFetch(url, body, token) {
+	let headers = {};
+
+	headers["content-type"] = "application/json"
+	if (token !== undefined) {
+		headers["authorization"] = token;
+	}
+
+	const req = await fetch(url, {
+		method: "POST",
+		body: JSON.stringify(body),
+		headers
+	});
+
+	return {
+		payload: await req.json(),
+		status: req.status
+	}
+}
+
+async function peakFetchGET(url, token) {
+	let headers = {};
+
+	if (token !== undefined) {
+		headers["authorization"] = token;
+	}
+
+	const req = await fetch(url, {
+		method: "GET",
+		headers
+	});
+
+	return {
+		payload: await req.json(),
+		status: req.status
+	}
+}
+
+class CacheMonster {
+	constructor(fetchFunction) {
+		// super();
+		this._fletcher = fetchFunction;
+		this.cache = new Map();
+	}
+	async fetch(objectId) {
+		const data = await this._fletcher(objectId);
+		this.cache.set(objectId, data);
+
+		return data;
+	}
+	async get(objectId) {
+		let data = this.cache.get(objectId);
+		if (data === undefined) {
+			data = await this.fetch(objectId);
+		}
+
+		return data;
+	}
+	acquire(objectId) {
+		return this.cache.get(objectId);
+	}
+}
+
 async function _handleCookieConsent() {
 	const buttonA = getElement("cookieConsent");
 	const buttonB = getElement("noCookieConsent");
@@ -54,26 +117,6 @@ async function handleCookieConsent() {
 	}
 
 	return;
-}
-
-async function peakFetch(url, body, token) {
-	let headers = {};
-
-	headers["content-type"] = "application/json"
-	if (token !== undefined) {
-		headers["authorization"] = token;
-	}
-
-	const req = await fetch(url, {
-		method: "POST",
-		body: JSON.stringify(body),
-		headers
-	});
-
-	return {
-		payload: await req.json(),
-		status: req.status
-	}
 }
 
 async function _handleClientLogin() {
@@ -147,6 +190,11 @@ async function _handleClientLogin() {
 
 async function handleClientLogin() {
 	const token = localStorage.getItem("token");
+	globalThis.token = token;
+
+	globalThis.channelData = new CacheMonster(async (objectId) => { return (await peakFetchGET(`${globalThis.apiUrl}/data/channel/${objectId}`, globalThis.token)).payload.payload; });
+	globalThis.guildData = new CacheMonster(async (objectId) => { return (await peakFetchGET(`${globalThis.apiUrl}/data/guild/${objectId}`, globalThis.token)).payload.payload; });
+	globalThis.userData = new CacheMonster(async (objectId) => { return (await peakFetchGET(`${globalThis.apiUrl}/data/user/${objectId}`, globalThis.token)).payload.payload; });
 
 	if (token === null) {
 		await _handleClientLogin();
@@ -157,23 +205,25 @@ async function handleClientLogin() {
 }
 
 function timestampToString(timestamp) {
-	let 
 }
 
-function createMessage(userId, content, timestamp) {
+async function createMessage(messagePayload) {
+	const author = await globalThis.userData.get(messagePayload.authorId);
 	const messageChatBox = getElement("mainAppContainerChatBox");
+
+	console.log(author);
 
 	const messageContainer = document.createElement("div");
 	const messageContent = document.createElement("div");
 	const messageAuthor = document.createElement("span");
 	const messageStamp = document.createElement("span");
 
-	messageStamp.innerText = new Date(timestamp);
+	messageStamp.innerText = new Date(messagePayload.timestamp);
 
-	messageAuthor.innerText = `${userId} `;
+	messageAuthor.innerText = `${author.displayName} `;
 	messageAuthor.classList.add("font_size_standard");
 
-	messageContent.innerText = content;
+	messageContent.innerText = messagePayload.content;
 
 	messageContainer.append(messageAuthor);
 	messageContainer.append(messageStamp);
@@ -187,15 +237,85 @@ function createMessage(userId, content, timestamp) {
 }
 
 function handleClientShit() {
-	showElement("mainAppContainer");
+	// showElement("mainAppContainer");
 	let i = 0;
+
+	globalThis.channelIds = [];
+	globalThis.guildIds = [];
+
+	const websocketConnection = new WebSocket(globalThis.gatewayUrl, [globalThis.token]);
+
+	websocketConnection.addEventListener("open", () => {
+		console.log("Websocket connection opened");
+	});
+
+	websocketConnection.addEventListener("close", () => {
+		hideElement("mainAppContainer");
+		window.location.href = window.location.href;
+	});
+
+	websocketConnection.addEventListener("message", async (chunk) => {
+		const msg = JSON.parse(chunk.data);
+
+		switch (msg.type) {
+		case "serverAuthentication":
+			console.log(`Connected to ${msg.payload.serverName}, version ${msg.payload.version}`);
+			break;
+		case "authStatus":
+			if (msg.payload.success) {
+				break;
+			}
+
+			localStorage.removeItem("token");
+			window.location.href = window.location.href;
+
+			break;
+		case "guildAvailable":
+			globalThis.guildIds.push(msg.payload.uuid);
+			console.log(`Received guildId ${msg.payload.uuid}`);
+			break;
+		case "channelAvailable":
+			globalThis.channelIds.push(msg.payload.uuid);
+			console.log(`Received channelId ${msg.payload.uuid}`);
+			break;
+		case "serverFinished":
+			for (let i = 0; i < globalThis.guildIds.length; i++) {
+				const guildId = globalThis.guildIds[i];
+				console.log(`Fetching guild guildId:${guildId}`);
+				await globalThis.guildData.fetch(guildId);
+				console.log(`Fetch successful`);
+			}
+
+			for (let i = 0; i < globalThis.channelIds.length; i++) {
+				const channelId = globalThis.channelIds[i];
+				console.log(`Fetching channel channelId:${channelId}`);
+				await globalThis.channelData.fetch(channelId);
+				console.log(`Fetch successful`);
+			}
+
+			showElement("mainAppContainer");
+			break;
+		case "messageCreate":
+			await createMessage(msg.payload);
+			break;
+		default:
+			console.warn(`Unknown message type ${msg.type}. Proceed with caution!`);
+			console.log(msg);
+			break;
+		}
+	});
 
 	getElement("mainAppContainerForm").addEventListener("submit", (e) => {
 		e.preventDefault();
+		const box = getElement("mainAppContainerFormText");
+
+		const text = String(box.value);
+		box.value = "";
+
+		console.log(text);
 	});
 
 	return new Promise((resolve) => {
-		createMessage("test", "test", Date.now());
 	});
 }
 
