@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>Chat Domestique</title>
+
+		<meta charset="utf-8">
+		<script src="script.js"></script>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<noscript class="position_centre">
+			<div>
+				<div class="font_size_giant">
+					chat domestique
+				</div>
+				<div class="font_size_standard">
+					an opinionated chat platform
+				</div><br>
+			</div>
+
+			<div id="javascriptStatusContainer">
+				<p class="font_size_big">
+					Please enable JavaScript in order to use this platform.<br>
+					Sorry for the inconvenience!
+				</p>
+			</div>
+		</noscript>
+
+		<div id="cookieStatusContainer" class="position_centre" hidden>
+			<div>
+				<div class="font_size_giant">
+					chat domestique
+				</div>
+				<div class="font_size_standard">
+					an opinionated chat platform
+				</div><br>
+			</div>
+
+			<div id="cookieStatusContainer">
+				<div id="cookieStatusContainerNotice">
+					<div class="font_size_medium">
+						Notice
+					</div><br>
+
+					<div id="cookieStatusContainer" class="font_size_standard">
+						so like this website application uses local storage in order to preserve user state<br>
+						please leave this website if you don't like it
+					</div><br>
+				</div>
+
+				<div id="cookieStatusContainerNoticeAcknowledgment" hidden>
+					<div id="cookieStatusContainerAcknowledgement" class="font_size_standard">
+						your lack of consent has been acknowledged<br>
+						your client-side data has been cleared
+					</div>
+				</div>
+				<button type="button" id="cookieConsent">Consent for 14 days</button>
+				<button type="button" id="noCookieConsent">Clear all data in local storage</button>
+			</div>
+		</div>
+		<div id="accountStatusContainer" class="position_centre" hidden>
+			<div id="accountStatusContainerLogoBar">
+				<div class="font_size_giant">
+					chat domestique
+				</div>
+				<div class="font_size_standard">
+					an opinionated chat platform
+				</div><br>
+			</div>
+
+			<div>
+				<div class="color_failure_notice" id="accountStatusContainerLoginFormFailureNotice" hidden>
+					Failed to log in and/or register!
+				</div><br>
+
+				<label for="username" class="font_size_medium">username</label><br>
+				<input id="accountStatusContainerUsernameInput" type="text"><br>
+
+				<label for="password" class="font_size_medium">password</label><br>
+				<input id="accountStatusContainerPasswordInput" type="password"><br><br>
+
+				<button type="button" id="accountStatusContainerSpecialButton" class="font_size_standard">Login</button>
+			</div>
+
+			<div id="accountStatusContainerButtonBar">
+				<button id="accountStatusContainerSpecialSwitchButton" type="button" class="font_size_standard">No account? Register instead!</button>
+			</div>
+		</div>
+
+		<div id="mainAppContainer" hidden>
+			<div id="mainAppContainerChat" class="">
+
+				<div id="mainAppContainerChatBox">
+				</div>
+
+				<input type="text">
+				<button type="button">Send</button>
+			</div>
+		</div>
+	</body>
+</html>
