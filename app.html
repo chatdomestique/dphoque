@@ -73,13 +73,15 @@
 					Failed to log in and/or register!
 				</div><br>
 
-				<label for="username" class="font_size_medium">username</label><br>
-				<input id="accountStatusContainerUsernameInput" type="text"><br>
+				<form id="accountStatusContainerDataSubmitForm">
+					<label for="username" class="font_size_medium">username</label><br>
+					<input id="accountStatusContainerUsernameInput" type="text"><br>
 
-				<label for="password" class="font_size_medium">password</label><br>
-				<input id="accountStatusContainerPasswordInput" type="password"><br><br>
+					<label for="password" class="font_size_medium">password</label><br>
+					<input id="accountStatusContainerPasswordInput" type="password"><br><br>
 
-				<button type="button" id="accountStatusContainerSpecialButton" class="font_size_standard">Login</button>
+					<button type="submit" id="accountStatusContainerSpecialButton" class="font_size_standard">Login</button>
+				</form>
 			</div>
 
 			<div id="accountStatusContainerButtonBar">
@@ -94,7 +96,7 @@
 				</div>
 
 				<form id="mainAppContainerForm">
-					<input type="text">
+					<textarea id="mainAppContainerFormText" name="" cols="40" rows="5"></textarea>
 					<button id="mainAppContainerFormConfirm" type="submit">Send</button>
 				</form>
 			</div>
