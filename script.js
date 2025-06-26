@@ -1,4 +1,5 @@
-globalThis.apiUrl = "https://api.chat.eqilia.eu/api/v0"
+globalThis.apiUrl = "https://api.chat.eqilia.eu/api/v0";
+globalThis.gatewayUrl = "wss://api.chat.eqilia.eu/api/v0/live/ws";
 
 function getElement(id) {
 	return document.getElementById(id);
