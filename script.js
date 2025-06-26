@@ -45,6 +45,7 @@ async function handleCookieConsent() {
 		await _handleCookieConsent();
 		return;
 	}
+	storageConsent = parseInt(storageConsent);
 
 	if (Date.now() > storageConsent) {
 		await _handleCookieConsent();
