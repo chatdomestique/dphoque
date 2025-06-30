@@ -235,7 +235,7 @@ async function createMessage(messagePayload) {
 }
 
 function handleClientShit() {
-	// showElement("mainAppContainer");
+	showElement("appLoadingContainer");
 	let i = 0;
 
 	globalThis.channelIds = [];
@@ -305,6 +305,7 @@ function handleClientShit() {
 				console.log(`Fetch successful, ${baseMessages.payload.payload.messages.length} messages retrieved.`);
 			}
 
+			hideElement("appLoadingContainer");
 			showElement("mainAppContainer");
 			break;
 		case "messageCreate":
