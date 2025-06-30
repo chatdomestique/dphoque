@@ -204,9 +204,6 @@ async function handleClientLogin() {
 	return;
 }
 
-function timestampToString(timestamp) {
-}
-
 async function createMessage(messagePayload) {
 	const author = await globalThis.userData.get(messagePayload.authorId);
 	const messageChatBox = getElement("mainAppContainerChatBox");
@@ -218,7 +215,7 @@ async function createMessage(messagePayload) {
 	const messageAuthor = document.createElement("span");
 	const messageStamp = document.createElement("span");
 
-	messageStamp.innerText = new Date(messagePayload.timestamp);
+	messageStamp.innerText = (new Date(messagePayload.timestamp)).toLocaleString();
 
 	messageAuthor.innerText = `${author.displayName} `;
 	messageAuthor.classList.add("font_size_standard");
