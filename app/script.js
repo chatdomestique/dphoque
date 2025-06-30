@@ -192,6 +192,7 @@ async function handleClientLogin() {
 	const token = localStorage.getItem("token");
 	globalThis.token = token;
 
+	globalThis.channelMessageData = new Map();
 	globalThis.channelData = new CacheMonster(async (objectId) => { return (await peakFetchGET(`${globalThis.apiUrl}/data/channel/${objectId}`, globalThis.token)).payload.payload; });
 	globalThis.guildData = new CacheMonster(async (objectId) => { return (await peakFetchGET(`${globalThis.apiUrl}/data/guild/${objectId}`, globalThis.token)).payload.payload; });
 	globalThis.userData = new CacheMonster(async (objectId) => { return (await peakFetchGET(`${globalThis.apiUrl}/data/user/${objectId}`, globalThis.token)).payload.payload; });
@@ -288,6 +289,20 @@ function handleClientShit() {
 				console.log(`Fetching channel channelId:${channelId}`);
 				await globalThis.channelData.fetch(channelId);
 				console.log(`Fetch successful`);
+
+				console.log(`Fetching messages for channelId:${channelId}`);
+				const baseMessages = await peakFetchGET(`${globalThis.apiUrl}/data/messages/${channelId}`, globalThis.token);
+				for (let i = 0; i < baseMessages.payload.payload.messages.length; i++) {
+					const message = baseMessages.payload.payload.messages[i];
+					let channelMessages = globalThis.channelMessageData.get(message.channelId);
+					if (channelMessages === undefined) {
+						channelMessages = new Map();
+					}
+
+					channelMessages.set(message.uuid, message);
+					globalThis.channelMessageData.set(message.channelId, channelMessages);
+				}
+				console.log(`Fetch successful, ${baseMessages.payload.payload.messages.length} messages retrieved.`);
 			}
 
 			showElement("mainAppContainer");
