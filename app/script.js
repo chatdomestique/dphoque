@@ -316,8 +316,8 @@ function handleClientShit() {
 
 		const msgreq = await peakFetch(`${globalThis.apiUrl}/message/post`, {
 			content: text,
-			guildId: "2afab9d1-71bc-5800-9bc8-93a4a00b7f1c",
-			channelId: "b4b7c88c-71b6-5260-807e-c0e42b299c19"
+			guildId: "dbf2c411-6e27-50e0-b899-cbebfe91515c",
+			channelId: "b9105365-a7ea-5fff-802b-5ef598439837"
 		}, globalThis.token);
 	});
 
