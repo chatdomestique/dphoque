@@ -142,14 +142,6 @@ async function _handleClientLogin() {
 			}
 		}
 
-		switchyStatus.addEventListener("click", () => {
-			if (state === "login") {
-				changeState("register");
-			} else {
-				changeState("login");
-			}
-		});
-
 		switchStatusButton.addEventListener("submit", async (e) => {
 			e.preventDefault();
 			hideElement("accountStatusContainerLoginFormFailureNotice");
@@ -180,6 +172,14 @@ async function _handleClientLogin() {
 				showElement("accountStatusContainerLoginFormFailureNotice");
 				console.error(e);
 				return;
+			}
+		});
+
+		switchyStatus.addEventListener("click", () => {
+			if (state === "login") {
+				changeState("register");
+			} else {
+				changeState("login");
 			}
 		});
 	});
