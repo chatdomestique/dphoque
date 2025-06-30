@@ -305,7 +305,7 @@ function handleClientShit() {
 		}
 	});
 
-	getElement("mainAppContainerForm").addEventListener("submit", (e) => {
+	getElement("mainAppContainerForm").addEventListener("submit", async (e) => {
 		e.preventDefault();
 		const box = getElement("mainAppContainerFormText");
 
@@ -313,6 +313,12 @@ function handleClientShit() {
 		box.value = "";
 
 		console.log(text);
+
+		const msgreq = await peakFetch(`${globalThis.apiUrl}/message/post`, {
+			content: text,
+			guildId: "2afab9d1-71bc-5800-9bc8-93a4a00b7f1c",
+			channelId: "b4b7c88c-71b6-5260-807e-c0e42b299c19"
+		}, globalThis.token);
 	});
 
 	return new Promise((resolve) => {
