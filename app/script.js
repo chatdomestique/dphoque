@@ -142,7 +142,7 @@ async function _handleClientLogin() {
 			}
 		}
 
-		switchyStatus.addEventListener("submit", () => {
+		switchyStatus.addEventListener("click", () => {
 			if (state === "login") {
 				changeState("register");
 			} else {
